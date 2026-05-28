@@ -17,8 +17,8 @@
 - [ ] Use a stored watermark to define each delta window.
 - [ ] Call IBM MDM REST APIs for each delta window.
 - [ ] Filter requests to the player entity type where the API supports it.
-- [ ] Land raw API responses in Azure storage.
-- [ ] Process only changed player-to-group mappings from the landed responses.
+- [ ] Write raw API responses directly to a Snowflake holding table.
+- [ ] Process only changed player-to-group mappings from the Snowflake holding table.
 - [ ] Load curated changed player-to-group rows into Snowflake.
 - [ ] Do not use Kafka, Event Streams, Event Hubs, or event subscriptions for this POC.
 - [ ] Do not export the entire dataset unless required as a fallback diffing method.
@@ -43,16 +43,16 @@
 
 - [ ] Create ADF linked service for IBM MDM REST API.
 - [ ] Create ADF linked service for Azure Key Vault.
-- [ ] Create ADF linked service for Azure storage.
 - [ ] Create ADF linked service for Snowflake.
+- [ ] Create Snowflake holding table for raw MDM API response blocks.
 - [ ] Create Snowflake table for curated player group deltas.
-- [ ] Create watermark storage with an initial test timestamp.
+- [ ] Create Snowflake watermark table with an initial test timestamp.
 - [ ] Create one pipeline that reads the watermark.
 - [ ] Add REST API call for one bounded delta window.
 - [ ] Add pagination or block loop for API responses.
 - [ ] Keep each block below the confirmed API limit.
-- [ ] Land each raw response block in Azure storage.
-- [ ] Parse changed player IDs from the landed response.
+- [ ] Write each raw response block to the Snowflake holding table.
+- [ ] Parse changed player IDs from the Snowflake holding table.
 - [ ] Parse previous and current global player ID if present.
 - [ ] Parse representative player ID if present.
 - [ ] If required fields are missing, call MDM entity detail or history API for enrichment.
@@ -64,9 +64,9 @@
 - [ ] Define one block as one API page, export chunk, or fixed record-count request.
 - [ ] Confirm whether the relevant API limit is 100,000 records in the target environment.
 - [ ] Start with a small block size for the POC.
-- [ ] Store raw responses before transformation.
+- [ ] Store raw responses in Snowflake before transformation.
 - [ ] Store processing watermark after successful Snowflake write.
-- [ ] Store API request URL, request timestamp, page token, and response file path for replay.
+- [ ] Store API request URL, request timestamp, page token, holding-table batch ID, and response hash for replay.
 - [ ] Re-run a processed block and confirm output is idempotent.
 - [ ] Increase block size until it is close to, but below, the confirmed safe limit.
 
@@ -86,11 +86,11 @@
 ## Objective 7: Prepare transition to serious development
 
 - [ ] Keep IBM credentials in Azure Key Vault.
-- [ ] Keep raw API responses for replay.
+- [ ] Keep raw API responses in a Snowflake holding table for replay.
 - [ ] Keep curated player group delta output in Snowflake.
 - [ ] Track watermarks outside the pipeline definition.
 - [ ] Capture failed API response payloads separately.
-- [ ] Log MDM request IDs, page tokens, response file paths, Snowflake load IDs if available, and ADF run IDs.
+- [ ] Log MDM request IDs, page tokens, holding-table batch IDs, Snowflake query IDs if available, and ADF run IDs.
 - [ ] Document confirmed API limits from the target environment.
 - [ ] Document selected record type, entity type, and field names.
 - [ ] Document known gaps before production build.
