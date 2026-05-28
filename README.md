@@ -14,12 +14,13 @@ Prove that an ADF pipeline can call IBM MDM REST APIs on a schedule and retrieve
 
 ## Planned approach
 
-Use ADF to run a watermark-based REST API batch. Each run requests a bounded delta window from IBM MDM entity history or export APIs, writes each raw response block directly to a Snowflake holding table, processes results in blocks below the confirmed API limit, and writes one curated output row per changed player ID to Snowflake.
+Use ADF to run a watermark-based REST API batch. Each run requests a bounded delta window with IBM MDM advanced export, writes the raw export output directly to a Snowflake holding table, enriches only incomplete candidate entities if needed, and writes one curated output row per changed player ID to Snowflake.
 
 ## Planning files
 
 - [POC instruction plan](docs/poc-implementation-plan.md)
 - [Objective 1 API path confirmation](docs/objective-1-api-path.md)
+- [Objective 2 batch architecture](docs/objective-2-batch-architecture.md)
 - [Setup checklist](docs/setup-checklist.md)
 - [Decision log template](docs/decision-log.md)
 
@@ -27,6 +28,6 @@ Use ADF to run a watermark-based REST API batch. Each run requests a bounded del
 
 - IBM Cloud Pak for Data target version is 5.3.x.
 - IBM MDM record type for players is `person` or a project-specific player record type.
-- IBM MDM entity type for player groups is `person_entity` or a project-specific player entity type.
+- IBM MDM entity type for player groups is a modified `person` entity with environment-specific values, expected to include `person-prod` and `person-dev`.
 - Delta extraction should be based on MDM entity membership changes, not full point-in-time export.
 - ADF will orchestrate REST API calls, pagination, block processing, direct Snowflake loading, and Snowflake watermark updates.

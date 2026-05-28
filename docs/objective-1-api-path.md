@@ -18,6 +18,7 @@ This keeps the POC batch-oriented and avoids scanning Neo4j directly.
 | Relevant Entity Maintenance endpoints | Confirmed from IBM docs | IBM documents `data_exports`, entity records, entity history, export status, and export download endpoints. Confirm availability in the target API explorer. |
 | Timestamp property for entity deltas | Confirmed from IBM docs | IBM documents `entity_last_updated` for entity exports from a point in time. |
 | Timestamp property for record deltas | Confirmed from IBM docs | IBM documents `record_last_updated` for record exports from a point in time. |
+| Player entity model | Confirmed | The player entity is based on `person`, but modified for this implementation. The guide must treat the exact entity type as an environment-specific value, such as `person-prod` or `person-dev`. |
 | Direct Neo4j access | Confirmed out of scope | IBM will not allow direct Neo4j access. ADF must use supported MDM REST APIs. |
 
 ## Still open
@@ -25,7 +26,7 @@ This keeps the POC batch-oriented and avoids scanning Neo4j directly.
 | Item | How to confirm | Notes |
 | --- | --- | --- |
 | Advanced export enabled in the target environment | Open the target MDM data API explorer and confirm `POST /mdm/v1/data_exports` is available. Then submit a small test export from a narrow time window, confirm the job is created, poll `GET /mdm/v1/data_exports/{export_id}`, and confirm `GET /mdm/v1/data_exports/{export_id}/download` returns a file after success. | The user or IBM environment owner must run this in the actual tenant. |
-| Player entity type | Confirm from the MDM data model or API explorer. | `person_entity` is only an example until confirmed. |
+| Environment-specific player entity type value | Confirm from the MDM data model or API explorer for each environment. | Use `person-prod` for production and `person-dev` for development if those are the confirmed values. |
 | Entity records endpoint availability | Confirm `GET /mdm/v1/entities/{id}/records` in the target API explorer. | This is not the primary extraction path. Use it only for enrichment if the batch export lacks required fields. |
 | Entity history endpoint availability | Confirm `GET /mdm/v1/entities/{id}/history` in the target API explorer. | This is also enrichment only, not batch discovery. |
 | Export record limit | Confirm with IBM or the target API explorer, then test with a controlled export near the expected limit. | The public advanced export page checked here does not state a 10,000 or 100,000 record cap. Treat the limit as unknown until the target environment confirms it. |
@@ -41,7 +42,7 @@ This keeps the POC batch-oriented and avoids scanning Neo4j directly.
 | Entity Maintenance can retrieve records, entities, history, and exports | Confirms the required API family exists. | Confirmed from IBM docs; still validate target-environment availability. |
 | Advanced export is enabled | Provides batch discovery of changed candidates. | Open: confirm `data_exports` endpoints are available in the target environment. |
 | Export can filter by update timestamp | Supports watermark-based extraction. | Confirmed from IBM docs: use `entity_last_updated` for entity exports or `record_last_updated` for record exports. |
-| Export can filter to player entity type | Keeps the batch small and relevant. | Use the confirmed player entity type, such as `person_entity` only if that is correct. |
+| Export can filter to player entity type | Keeps the batch small and relevant. | Use the environment-specific player entity type value, such as `person-prod` or `person-dev`. |
 | Entity records endpoint is available | Provides current member records when export rows are incomplete. | `GET /mdm/v1/entities/{id}/records` is available. |
 | Entity history endpoint is available | Provides change context for one candidate entity. | `GET /mdm/v1/entities/{id}/history` is available. |
 | API limits are known | Prevents oversized batches. | Open: confirm whether the export cap is 10,000, 100,000, or tenant-specific. |
@@ -73,7 +74,7 @@ Entity records and entity history are not the main extraction mechanism. They ar
 
 ## Example request shape to validate
 
-This example is intentionally generic. Replace `person_entity`, timestamps, file name, and property names with values confirmed from the target MDM environment.
+This example is intentionally generic. Replace `{player_entity_type}`, timestamps, file name, and property names with values confirmed from the target MDM environment. For this POC, `{player_entity_type}` should resolve to an environment-specific modified `person` entity type such as `person-prod` or `person-dev`.
 
 ```json
 {
@@ -85,7 +86,7 @@ This example is intentionally generic. Replace `person_entity`, timestamps, file
     "filters": [
       {
         "type": "ENTITY",
-        "values": ["person_entity"]
+        "values": ["{player_entity_type}"]
       }
     ],
     "query": {
@@ -109,7 +110,7 @@ This example is intentionally generic. Replace `person_entity`, timestamps, file
 
 ## What not to decide yet
 
-- Do not choose the final player entity type until the data model is confirmed.
+- Do not hardcode one player entity type for every environment. The guide should document an environment-specific value such as `person-prod` or `person-dev`.
 - Do not assume the representative player ID field name.
 - Do not assume the export contains previous group membership.
 - Do not design the Snowflake parsing logic yet; that belongs with later objectives.
@@ -122,7 +123,7 @@ Objective 1 is complete when the guide records:
 - Confirmed MDM API service group and Entity Maintenance/data API family. Current status: confirmed from IBM docs.
 - Confirmed advanced export endpoint and request shape. Current status: open in target environment.
 - Confirmed timestamp property for the watermark. Current status: confirmed from IBM docs as `entity_last_updated` for entity export.
-- Confirmed player entity type filter.
+- Confirmed player entity type filter. Current status: entity model is confirmed as modified `person`; exact environment value must be selected per environment.
 - Confirmed enrichment endpoints for records and history.
 - Confirmed relevant API limits. Current status: open; public docs checked here do not state whether the export cap is 10,000 or 100,000 records.
 - Confirmation that direct Neo4j access is not needed. Current status: confirmed out of scope.

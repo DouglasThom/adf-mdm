@@ -12,13 +12,15 @@
 - [ ] Confirm user or service account has `mdm-oc.model.read`.
 - [ ] Run MDM data health check against `target=neo4j`.
 - [ ] Confirm player source record type.
-- [ ] Confirm player entity type.
+- [ ] Confirm player entity model is the modified `person` model.
+- [ ] Confirm production player entity type value, expected to be `person-prod`.
+- [ ] Confirm development player entity type value, expected to be `person-dev`.
 - [ ] Confirm field that contains source player ID.
 - [ ] Confirm field that contains global player ID.
 - [ ] Confirm field or rule that identifies representative player ID.
 - [ ] Confirm entity history retention is enabled and long enough for the planned batch cadence.
 - [ ] Confirm documented page-size, pagination, export, and rate limits in the target environment.
-- [ ] Confirm whether any required endpoint has a 100,000-record limit.
+- [ ] Confirm whether any required endpoint has a 10,000-record, 100,000-record, or tenant-specific limit.
 
 ## IBM MDM REST API delta access
 

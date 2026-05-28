@@ -25,11 +25,11 @@ Use UTC timestamps for the POC unless the target MDM environment proves otherwis
 | Previous watermark | `2026-05-28T13:00:00Z` |
 | Batch end time | `2026-05-28T14:00:00Z` |
 | Export filter | `entity_last_updated >= previous_watermark AND entity_last_updated < batch_end_time` |
-| Player entity filter | `person_entity` until the target player entity type is confirmed |
+| Player entity filter | `{player_entity_type}`, resolved per environment, such as `person-prod` or `person-dev` |
 
 ### Example IBM MDM export request shape
 
-This is an illustrative request shape based on IBM's advanced export documentation, not a ready-to-run payload. Confirm the exact entity type, property names, and supported operators in the target MDM API explorer before using it in ADF.
+This is an illustrative request shape based on IBM's advanced export documentation, not a ready-to-run payload. Confirm the exact environment-specific entity type, property names, and supported operators in the target MDM API explorer before using it in ADF.
 
 ```json
 {
@@ -41,7 +41,7 @@ This is an illustrative request shape based on IBM's advanced export documentati
     "filters": [
       {
         "type": "ENTITY",
-        "values": ["person_entity"]
+        "values": ["{player_entity_type}"]
       }
     ],
     "query": {
@@ -69,7 +69,7 @@ Use these only after the candidate export identifies the entity ID.
 
 | Need | IBM MDM API pattern | Example placeholders |
 | --- | --- | --- |
-| Current member records for an entity | `GET /mdm/v1/entities/{id}/records` | `{id}=person_entity-12345`, `entity_type=person_entity`, `crn={mdm_service_crn}` |
+| Current member records for an entity | `GET /mdm/v1/entities/{id}/records` | `{id}=person-prod-12345`, `entity_type={player_entity_type}`, `crn={mdm_service_crn}` |
 | Entity change history | `GET /mdm/v1/entities/{id}/history` | `start_time={previous_watermark}`, `end_time={batch_end_time}`, `offset=0`, `limit=50` |
 | Export status | `GET /mdm/v1/data_exports/{export_id}` | `{export_id}` from the export creation response |
 | Export file download | `GET /mdm/v1/data_exports/{export_id}/download` | Download only after status is successful |
@@ -116,32 +116,36 @@ Focused guide: [Objective 1 API path confirmation](objective-1-api-path.md).
 - [x] Confirm MDM APIs are grouped into Configuration, Entity Maintenance, Job, Matching, Migration, and Model services.
 - [x] Confirm the Entity Maintenance service can retrieve records, entities, entity history, and exports.
 - [x] Confirm the advanced export API can filter entity exports by `entity_last_updated`.
-- [ ] Confirm the advanced export API can filter to the selected player entity type.
+- [x] Confirm the player entity model is modified `person`, with environment-specific values such as `person-prod` and `person-dev`.
+- [ ] Confirm the advanced export API can filter to the selected environment-specific player entity type.
 - [ ] Confirm the entity history endpoint is available for the player entity type and can be called per changed entity ID.
 - [ ] Confirm REST API pagination, page-size limits, export limits, and rate limits.
 - [x] Confirm direct Neo4j access is not required for this POC.
 
 ## Objective 2: Select the minimum batch delta architecture
 
-- [ ] Use ADF scheduled execution as the only trigger.
-- [ ] Use a stored watermark to define each delta window.
-- [ ] Call IBM MDM advanced export for each delta window.
-- [ ] Filter export requests to the player entity type where the API supports it.
-- [ ] Write raw API responses directly to a Snowflake holding table.
-- [ ] Process only changed player-to-group mappings from the Snowflake holding table.
-- [ ] Call entity records or entity history APIs only for candidate entities that require enrichment.
-- [ ] Load curated changed player-to-group rows into Snowflake.
-- [ ] Do not use Kafka, Event Streams, Event Hubs, or event subscriptions for this POC.
-- [ ] Do not export the entire dataset unless required as a fallback diffing method.
-- [ ] Do not implement golden-record survivorship.
-- [ ] Use the MDM representative player ID as-is.
+Focused guide: [Objective 2 batch architecture](objective-2-batch-architecture.md).
+
+- [x] Use ADF scheduled execution as the only trigger.
+- [x] Use a stored watermark to define each delta window.
+- [x] Call IBM MDM advanced export for each delta window.
+- [x] Filter export requests to the environment-specific player entity type where the API supports it.
+- [x] Write raw API responses directly to a Snowflake holding table.
+- [x] Process only changed player-to-group mappings from the Snowflake holding table.
+- [x] Call entity records or entity history APIs only for candidate entities that require enrichment.
+- [x] Load curated changed player-to-group rows into Snowflake.
+- [x] Do not use Kafka, Event Streams, Event Hubs, or event subscriptions for this POC.
+- [x] Do not export the entire dataset unless required as a fallback diffing method.
+- [x] Do not implement golden-record survivorship.
+- [x] Use the MDM representative player ID as-is.
 
 ## Objective 3: Confirm datasets and identifiers
 
 - [ ] List MDM record types from the data model.
 - [ ] Select the player record type.
 - [ ] List MDM entity types from the data model.
-- [ ] Select the player entity type.
+- [x] Select the player entity model as modified `person`.
+- [ ] Confirm exact environment-specific player entity type values, expected to include `person-prod` and `person-dev`.
 - [ ] Confirm source systems included in the POC.
 - [ ] Confirm source player ID field.
 - [ ] Confirm global player ID field.
