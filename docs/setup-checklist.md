@@ -39,15 +39,27 @@
 - [ ] Create Azure Data Factory instance.
 - [ ] Create Azure Storage account.
 - [ ] Create raw landing container for MDM API responses.
-- [ ] Create curated container or table for player group delta output.
+- [ ] Create staging container or folder for files loaded into Snowflake.
 - [ ] Create storage location or table for the ADF watermark.
 - [ ] Create Key Vault.
 - [ ] Store IBM API credential in Key Vault.
+- [ ] Store Snowflake credential in Key Vault.
 - [ ] Enable ADF managed identity.
 - [ ] Grant ADF access to Key Vault secrets.
 - [ ] Grant ADF write access to raw landing storage.
-- [ ] Grant ADF write access to curated output storage.
+- [ ] Grant ADF write access to Snowflake staging storage if external staging is used.
 - [ ] Grant ADF read and write access to the watermark store.
+
+## Snowflake
+
+- [ ] Confirm Snowflake account, warehouse, database, and schema for the POC.
+- [ ] Create Snowflake role for ADF loads.
+- [ ] Grant the role usage on the POC warehouse, database, and schema.
+- [ ] Create table for curated player group deltas.
+- [ ] Create table or location for batch watermark if Snowflake will own the watermark.
+- [ ] Confirm ADF can connect to Snowflake.
+- [ ] Confirm load method: ADF Snowflake connector direct load or staged files plus Snowflake copy.
+- [ ] Confirm duplicate-handling key for idempotent loads.
 
 ## Proof data
 

@@ -19,6 +19,7 @@
 - [ ] Filter requests to the player entity type where the API supports it.
 - [ ] Land raw API responses in Azure storage.
 - [ ] Process only changed player-to-group mappings from the landed responses.
+- [ ] Load curated changed player-to-group rows into Snowflake.
 - [ ] Do not use Kafka, Event Streams, Event Hubs, or event subscriptions for this POC.
 - [ ] Do not export the entire dataset unless required as a fallback diffing method.
 - [ ] Do not implement golden-record survivorship.
@@ -43,6 +44,8 @@
 - [ ] Create ADF linked service for IBM MDM REST API.
 - [ ] Create ADF linked service for Azure Key Vault.
 - [ ] Create ADF linked service for Azure storage.
+- [ ] Create ADF linked service for Snowflake.
+- [ ] Create Snowflake table for curated player group deltas.
 - [ ] Create watermark storage with an initial test timestamp.
 - [ ] Create one pipeline that reads the watermark.
 - [ ] Add REST API call for one bounded delta window.
@@ -53,8 +56,8 @@
 - [ ] Parse previous and current global player ID if present.
 - [ ] Parse representative player ID if present.
 - [ ] If required fields are missing, call MDM entity detail or history API for enrichment.
-- [ ] Write POC output with one row per changed player ID.
-- [ ] Update the watermark only after the output write succeeds.
+- [ ] Write POC output to Snowflake with one row per changed player ID.
+- [ ] Update the watermark only after the Snowflake write succeeds.
 
 ## Objective 5: Process blocks safely
 
@@ -62,7 +65,7 @@
 - [ ] Confirm whether the relevant API limit is 100,000 records in the target environment.
 - [ ] Start with a small block size for the POC.
 - [ ] Store raw responses before transformation.
-- [ ] Store processing watermark after successful output write.
+- [ ] Store processing watermark after successful Snowflake write.
 - [ ] Store API request URL, request timestamp, page token, and response file path for replay.
 - [ ] Re-run a processed block and confirm output is idempotent.
 - [ ] Increase block size until it is close to, but below, the confirmed safe limit.
@@ -84,10 +87,10 @@
 
 - [ ] Keep IBM credentials in Azure Key Vault.
 - [ ] Keep raw API responses for replay.
-- [ ] Keep transformation output separate from raw landing data.
+- [ ] Keep curated player group delta output in Snowflake.
 - [ ] Track watermarks outside the pipeline definition.
 - [ ] Capture failed API response payloads separately.
-- [ ] Log MDM request IDs, page tokens, response file paths, and ADF run IDs.
+- [ ] Log MDM request IDs, page tokens, response file paths, Snowflake load IDs if available, and ADF run IDs.
 - [ ] Document confirmed API limits from the target environment.
 - [ ] Document selected record type, entity type, and field names.
 - [ ] Document known gaps before production build.
