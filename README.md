@@ -2,6 +2,8 @@
 
 This repo contains a batch-oriented proof-of-concept plan for retrieving changed player-to-group mappings from IBM Cloud Pak for Data Master Data Management (MDM) with Azure Data Factory (ADF) and storing the curated deltas in Snowflake.
 
+This is a documentation-only project. The repo is intended to capture instructions, checklists, decisions, validation steps, and assumptions; it is not intended to contain application code, build tooling, deployment scripts, or infrastructure implementation.
+
 ## POC goal
 
 Prove that an ADF pipeline can call IBM MDM REST APIs on a schedule and retrieve only player records whose entity/group membership changed, including:
@@ -16,7 +18,7 @@ Use ADF to run a watermark-based REST API batch. Each run requests a bounded del
 
 ## Planning files
 
-- [POC implementation plan](docs/poc-implementation-plan.md)
+- [POC instruction plan](docs/poc-implementation-plan.md)
 - [Setup checklist](docs/setup-checklist.md)
 - [Decision log template](docs/decision-log.md)
 

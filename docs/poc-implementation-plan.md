@@ -1,4 +1,6 @@
-# POC implementation plan
+# POC instruction plan
+
+This document describes the procedure to document and validate. It is not a build plan for application code, deployment scripts, or infrastructure implementation.
 
 ## Objective 1: Confirm supported IBM MDM batch API path
 
@@ -39,7 +41,7 @@
 - [ ] Confirm API field that shows group membership after the change.
 - [ ] If the delta response is incomplete, identify the entity detail API call needed to enrich each changed entity.
 
-## Objective 4: Build the smallest working ADF batch
+## Objective 4: Document the smallest working ADF batch procedure
 
 - [ ] Create ADF linked service for IBM MDM REST API.
 - [ ] Create ADF linked service for Azure Key Vault.
@@ -83,7 +85,7 @@
 - [ ] Confirm API update timestamp or effective timestamp is captured.
 - [ ] Confirm source record ID and source system are captured.
 
-## Objective 7: Prepare transition to serious development
+## Objective 7: Prepare documented handoff for future development
 
 - [ ] Keep IBM credentials in Azure Key Vault.
 - [ ] Keep raw API responses in a Snowflake holding table for replay.
@@ -93,7 +95,7 @@
 - [ ] Log MDM request IDs, page tokens, holding-table batch IDs, Snowflake query IDs if available, and ADF run IDs.
 - [ ] Document confirmed API limits from the target environment.
 - [ ] Document selected record type, entity type, and field names.
-- [ ] Document known gaps before production build.
+- [ ] Document known gaps before future production planning.
 
 ## IBM documentation checked
 
