@@ -19,6 +19,7 @@ Use ADF to run a watermark-based REST API batch. Each run requests a bounded del
 ## Planning files
 
 - [POC instruction plan](docs/poc-implementation-plan.md)
+- [API call excerpt](docs/api-call-excerpt.md)
 - [Objective 1 API path confirmation](docs/objective-1-api-path.md)
 - [Objective 2 batch architecture](docs/objective-2-batch-architecture.md)
 - [Setup checklist](docs/setup-checklist.md)
